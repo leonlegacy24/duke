@@ -23,25 +23,38 @@ public class Duke {
             }else if(input.equals("list")){
                 System.out.println("Your List:");
                 for(int i = 1; i<=tasklist.size(); i++)
-                    System.out.println( i + ". [" +tasklist.get(i-1).getStatusIcon() + "]" + tasklist.get(i-1).description);
+                    System.out.println( i + ". " + tasklist.get(i-1).toString());
+                    System.out.println("You have currently " +tasklist.size()+" Tasks!" );
 
 
             }
             else if (input.matches(".*unmark.*")){
                 int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
                 tasklist.get(tasknumber).Uncheck();
-                System.out.println("Tasks has been unchecked!: [" + tasklist.get(tasknumber).getStatusIcon() +"]" + tasklist.get(tasknumber).description);
+                System.out.println("Tasks has been unchecked!:" + tasklist.get(tasknumber).toString());
             }
             else if (input.matches(".*mark.*")){
                 int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
                 tasklist.get(tasknumber).Check();
-                System.out.println("Tasks has been checked!: [" + tasklist.get(tasknumber).getStatusIcon() +"]" + tasklist.get(tasknumber).description);
+                System.out.println("Tasks has been checked!:" + tasklist.get(tasknumber).toString());
 
             }
-            else {
-                Task t = new Task(input);
+            else if(input.matches(".*todo.*")) {
+                ToDo t = new ToDo(input.substring(5));
                 tasklist.add(t);
                 System.out.println("Added:" + t.description);
+            }
+            else if(input.matches(".*deadline.*")) {
+                String[] split = input.split("/");
+                Deadline d = new Deadline(split[0].substring(9),split[1]);
+                tasklist.add(d);
+                System.out.println("Added:" + d.description);
+            }
+            else if(input.matches(".*event.*")) {
+                String[] split = input.split("/");
+                Event e = new Event(split[0].substring(6),split[1]);
+                tasklist.add(e);
+                System.out.println("Added:" + e.description);
             }
         }
     }
