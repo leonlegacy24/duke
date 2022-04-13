@@ -17,6 +17,7 @@ public class Duke {
         while(running == true){
             input = scan.nextLine();
             if (input.equals("bye")){
+
                 running = false;
                 System.out.println("Thank you for using Chat bot! Goodbye!");
 
@@ -39,22 +40,50 @@ public class Duke {
                 System.out.println("Tasks has been checked!:" + tasklist.get(tasknumber).toString());
 
             }
-            else if(input.matches(".*todo.*")) {
-                ToDo t = new ToDo(input.substring(5));
-                tasklist.add(t);
-                System.out.println("Added:" + t.description);
+            else if(input.matches(".*todo.*")){
+                    try {
+                        String ErrorCheck=input.replaceAll("\\s","").substring(5);
+                        ToDo t = new ToDo(input.substring(5));
+                        tasklist.add(t);
+                        System.out.println("Added:" + t.description);
+                    }
+                    catch (Exception e){
+                        System.out.println("Sorry! Your ToDo cannot be empty!");
+                    }
+
             }
             else if(input.matches(".*deadline.*")) {
-                String[] split = input.split("/");
-                Deadline d = new Deadline(split[0].substring(9),split[1]);
-                tasklist.add(d);
-                System.out.println("Added:" + d.description);
+                try{
+                    String[] split = input.split("/");
+                    String ErrorCheck=input.replaceAll("\\s","").substring(10);
+                    Deadline d = new Deadline(split[0].substring(9),split[1]);
+                    tasklist.add(d);
+                    System.out.println("Added:" + d.description);
+
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("Sorry! Your Deadline cannot be empty!");
+                } catch (Exception e){
+                    System.out.println("Sorry! Your deadline Date cannot be empty!");
+                }
+
+
             }
             else if(input.matches(".*event.*")) {
-                String[] split = input.split("/");
-                Event e = new Event(split[0].substring(6),split[1]);
-                tasklist.add(e);
-                System.out.println("Added:" + e.description);
+                try{
+                    String[] split = input.split("/");
+                    String ErrorCheck=input.replaceAll("\\s","").substring(7);
+                    Event e = new Event(split[0].substring(6),split[1]);
+                    tasklist.add(e);
+                    System.out.println("Added:" + e.description);
+
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("Sorry! Your Event cannot be empty!");
+                } catch (Exception e){
+                    System.out.println("Sorry! Your Event Date cannot be empty!");
+                }
+
+            }else{
+                System.out.println("Sorry I do not understand what do you mean");
             }
         }
     }
