@@ -11,7 +11,6 @@ public class Duke {
         ArrayList<Task> tasklist = new ArrayList<Task>();
         boolean running = true;
         String input;
-        int count = 0;
         System.out.println("Hello! Welcome to Chat bot! Please Type a command:");
 
         while(running == true){
@@ -30,26 +29,36 @@ public class Duke {
 
             }
             else if (input.matches(".*unmark.*")){
-                int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
-                tasklist.get(tasknumber).Uncheck();
-                System.out.println("Tasks has been unchecked!:" + tasklist.get(tasknumber).toString());
+                try {
+                    int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", "")) - 1;
+                    tasklist.get(tasknumber).Uncheck();
+                    System.out.println("Tasks has been unchecked!:" + tasklist.get(tasknumber).toString());
+                } catch (Exception e){
+                    System.out.println("Sorry, the task you have entered does not exist!");
+                }
+
             }
             else if (input.matches(".*mark.*")){
-                int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
-                tasklist.get(tasknumber).Check();
-                System.out.println("Tasks has been checked!:" + tasklist.get(tasknumber).toString());
+                try{
+                    int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
+                    tasklist.get(tasknumber).Check();
+                    System.out.println("Tasks has been checked!:" + tasklist.get(tasknumber).toString());
+
+                } catch (Exception e) {
+                    System.out.println("Sorry, the task you have entered does not exist!");
+                }
 
             }
             else if (input.matches(".*delete.*")){
-                int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
-                System.out.println("Tasks has been Removed:" + tasklist.get(tasknumber).toString());
-                tasklist.remove(tasknumber);
-                System.out.println("You have currently " +tasklist.size()+" Tasks!" );
-
-
+                try{
+                    int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
+                    System.out.println("Tasks has been Removed:" + tasklist.get(tasknumber).toString());
+                    tasklist.remove(tasknumber);
+                    System.out.println("You have currently " +tasklist.size()+" Tasks!" );
+                }catch (Exception e) {
+                    System.out.println("Sorry, the task you you are trying to delete does not exist!");
+                }
             }
-
-
 
             else if(input.matches(".*todo.*")){
                     try {
