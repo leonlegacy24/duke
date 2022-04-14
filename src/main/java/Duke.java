@@ -40,6 +40,17 @@ public class Duke {
                 System.out.println("Tasks has been checked!:" + tasklist.get(tasknumber).toString());
 
             }
+            else if (input.matches(".*delete.*")){
+                int tasknumber = Integer.parseInt(input.replaceAll("[^0-9]", ""))-1;
+                System.out.println("Tasks has been Removed:" + tasklist.get(tasknumber).toString());
+                tasklist.remove(tasknumber);
+                System.out.println("You have currently " +tasklist.size()+" Tasks!" );
+
+
+            }
+
+
+
             else if(input.matches(".*todo.*")){
                     try {
                         String ErrorCheck=input.replaceAll("\\s","").substring(5);
