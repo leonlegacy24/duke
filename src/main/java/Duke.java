@@ -3,22 +3,39 @@ import com.sun.source.util.TaskListener;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 
 public class Duke {
-    public static void main(String[] args) {
+
+        public static ArrayList<Task> tasklist = new ArrayList<Task>();
+
+
+        public static void main(String[] args) throws FileNotFoundException {
         Scanner scan = new Scanner(System.in);
-        ArrayList<Task> tasklist = new ArrayList<Task>();
+
         boolean running = true;
         String input;
+        String file = "data/Task.txt";
+        readFile(file);
+        File f = new File(file);
         System.out.println("Hello! Welcome to Chat bot! Please Type a command:");
 
         while(running == true){
             input = scan.nextLine();
             if (input.equals("bye")){
-
                 running = false;
+                try {
+                    writeToFile(file, tasklist);
+                } catch (IOException e) {
+                    System.out.println("Something went wrong: " + e.getMessage());
+                }
                 System.out.println("Thank you for using Chat bot! Goodbye!");
+                System.out.println("Your file is saved at:" +f.getAbsolutePath());
 
             }else if(input.equals("list")){
                 System.out.println("Your List:");
@@ -76,7 +93,7 @@ public class Duke {
                 try{
                     String[] split = input.split("/");
                     String ErrorCheck=input.replaceAll("\\s","").substring(10);
-                    Deadline d = new Deadline(split[0].substring(9),split[1]);
+                    Deadline d = new Deadline(split[0].substring(9),split[1].trim());
                     tasklist.add(d);
                     System.out.println("Added:" + d.description);
 
@@ -92,7 +109,7 @@ public class Duke {
                 try{
                     String[] split = input.split("/");
                     String ErrorCheck=input.replaceAll("\\s","").substring(7);
-                    Event e = new Event(split[0].substring(6),split[1]);
+                    Event e = new Event(split[0].substring(6),split[1].trim());
                     tasklist.add(e);
                     System.out.println("Added:" + e.description);
 
@@ -106,5 +123,49 @@ public class Duke {
                 System.out.println("Sorry I do not understand what do you mean");
             }
         }
+
+
+
+    }
+
+    private static void writeToFile(String filePath, ArrayList<Task> TaskToAdd) throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        for (int i = 0; i < TaskToAdd.size(); i++) {
+            fw.write(TaskToAdd.get(i).toString());
+            fw.write("\n");
+        }
+        fw.close();
+    }
+
+    public static void readFile(String filePath) throws FileNotFoundException {
+        File f = new File(filePath);
+        Scanner s = new Scanner(f);
+
+        while (s.hasNext()){
+            String line = s.nextLine();
+            if(line.matches(".*[T].*")){
+                ToDo t = new ToDo(line.substring(6));
+                tasklist.add(t);
+                if(line.matches(".*[X].*")){
+                    t.Check();
+                }
+            }else if(line.matches(".*[E].*")){
+                int LocationOfBy = line.indexOf("(");
+                Event e = new Event(line.substring(6,LocationOfBy-1),line.substring(LocationOfBy+5,line.length()-1));
+                tasklist.add(e);
+                if(line.matches(".*[X].*")){
+                    e.Check();
+                }
+            }else if(line.matches(".*[D].*")) {
+                int LocationOfBy2 = line.indexOf("(");
+                Deadline d = new Deadline(line.substring(6, LocationOfBy2-1), line.substring(LocationOfBy2 +5, line.length() - 1));
+                tasklist.add(d);
+                if (line.matches(".*[X].*")) {
+                    d.Check();
+                }
+            }
+
+        }
+
     }
 }
