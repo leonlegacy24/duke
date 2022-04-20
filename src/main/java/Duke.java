@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 
 public class Duke {
@@ -24,8 +27,14 @@ public class Duke {
         readFile(file);
         File f = new File(file);
         System.out.println("Hello! Welcome to Chat bot! Please Type a command:");
+        if(tasklist.size()!= 0){
+            System.out.println("You have currently " +tasklist.size()+" Existing Tasks! Use \"list\" to find out what they are!" );
 
-        while(running == true){
+        }
+
+
+
+            while(running == true){
             input = scan.nextLine();
             if (input.equals("bye")){
                 running = false;
@@ -90,26 +99,28 @@ public class Duke {
 
             }
             else if(input.matches(".*deadline.*")) {
-                try{
+                //try{
                     String[] split = input.split("/");
-                    String ErrorCheck=input.replaceAll("\\s","").substring(10);
-                    Deadline d = new Deadline(split[0].substring(9),split[1].trim());
+                    DateTimeFormatter MyFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm");
+                    LocalDateTime dt = LocalDateTime.parse(split[1].trim(),MyFormat);
+                    Deadline d = new Deadline(split[0].substring(9),dt);
                     tasklist.add(d);
                     System.out.println("Added:" + d.description);
 
-                } catch (StringIndexOutOfBoundsException e) {
-                    System.out.println("Sorry! Your Deadline cannot be empty!");
-                } catch (Exception e){
-                    System.out.println("Sorry! Your deadline Date cannot be empty!");
-                }
+                //} catch (StringIndexOutOfBoundsException e) {
+                    //System.out.println("Sorry! Your Deadline cannot be empty!");
+               // } catch (Exception e){
+                    //System.out.println("Sorry! Your deadline Date cannot be empty!");
+                //}
 
 
             }
             else if(input.matches(".*event.*")) {
                 try{
                     String[] split = input.split("/");
-                    String ErrorCheck=input.replaceAll("\\s","").substring(7);
-                    Event e = new Event(split[0].substring(6),split[1].trim());
+                    DateTimeFormatter MyFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm");
+                    LocalDateTime dt = LocalDateTime.parse(split[1].trim(),MyFormat);
+                    Event e = new Event(split[0].substring(6),dt);
                     tasklist.add(e);
                     System.out.println("Added:" + e.description);
 
@@ -140,6 +151,7 @@ public class Duke {
     public static void readFile(String filePath) throws FileNotFoundException {
         File f = new File(filePath);
         Scanner s = new Scanner(f);
+        DateTimeFormatter MyFormat = DateTimeFormatter.ofPattern("MMM d yyyy hh:mma");
 
         while (s.hasNext()){
             String line = s.nextLine();
@@ -151,14 +163,16 @@ public class Duke {
                 }
             }else if(line.matches(".*[E].*")){
                 int LocationOfBy = line.indexOf("(");
-                Event e = new Event(line.substring(6,LocationOfBy-1),line.substring(LocationOfBy+5,line.length()-1));
+                LocalDateTime dt = LocalDateTime.parse(line.substring(LocationOfBy+5,line.length()-1),MyFormat);
+                Event e = new Event(line.substring(6,LocationOfBy-1),dt);
                 tasklist.add(e);
                 if(line.matches(".*[X].*")){
                     e.Check();
                 }
             }else if(line.matches(".*[D].*")) {
                 int LocationOfBy2 = line.indexOf("(");
-                Deadline d = new Deadline(line.substring(6, LocationOfBy2-1), line.substring(LocationOfBy2 +5, line.length() - 1));
+                LocalDateTime dt = LocalDateTime.parse(line.substring(LocationOfBy2 +5, line.length() - 1),MyFormat);
+                Deadline d = new Deadline(line.substring(6, LocationOfBy2-1),dt);
                 tasklist.add(d);
                 if (line.matches(".*[X].*")) {
                     d.Check();
