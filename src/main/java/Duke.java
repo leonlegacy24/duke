@@ -86,11 +86,11 @@ public class Duke {
                 }
             }
 
+
             else if(input.matches(".*todo.*")){
                     try {
                         String ErrorCheck=input.replaceAll("\\s","").substring(5);
                         ToDo t = new ToDo(input.substring(5));
-                        tasklist.add(t);
                         System.out.println("Added:" + t.description);
                     }
                     catch (Exception e){
@@ -99,7 +99,7 @@ public class Duke {
 
             }
             else if(input.matches(".*deadline.*")) {
-                //try{
+                try{
                     String[] split = input.split("/");
                     DateTimeFormatter MyFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm");
                     LocalDateTime dt = LocalDateTime.parse(split[1].trim(),MyFormat);
@@ -107,11 +107,11 @@ public class Duke {
                     tasklist.add(d);
                     System.out.println("Added:" + d.description);
 
-                //} catch (StringIndexOutOfBoundsException e) {
-                    //System.out.println("Sorry! Your Deadline cannot be empty!");
-               // } catch (Exception e){
-                    //System.out.println("Sorry! Your deadline Date cannot be empty!");
-                //}
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("Sorry! Your Deadline cannot be empty!");
+               } catch (Exception e){
+                    System.out.println("Sorry! Your deadline Date cannot be empty!");
+                }
 
 
             }
@@ -125,12 +125,39 @@ public class Duke {
                     System.out.println("Added:" + e.description);
 
                 } catch (StringIndexOutOfBoundsException e) {
-                    System.out.println("Sorry! Your Event cannot be empty!");
+                    System.out.println("Sorry! Your Event task cannot be empty!");
                 } catch (Exception e){
                     System.out.println("Sorry! Your Event Date cannot be empty!");
                 }
 
-            }else{
+            }
+            else if (input.matches(".*rec.*")){
+                try{
+                    String[] split = input.split("/");
+                    Recurring r = new Recurring(split[0].substring(4).trim(),split[1].trim());
+                    System.out.println("Added:" + r.description);
+                    tasklist.add(r);
+
+                }catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("Sorry! Your Reccuring Task cannot be empty! ");
+                } catch (Exception e){
+                    System.out.println("Sorry! Your reccurring date or time!");
+                }
+            }
+            else if (input.matches(".*find.*")){
+                try{
+                    String[] split = input.split("/");
+                    Recurring r = new Recurring(split[0].substring(4).trim(),split[1].trim());
+                    System.out.println("Added:" + r.description);
+                    tasklist.add(r);
+
+                }catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("Sorry! Your Reccuring Task cannot be empty! ");
+                } catch (Exception e){
+                    System.out.println("Sorry! Your reccurring date or time!");
+                }
+            }
+            else{
                 System.out.println("Sorry I do not understand what do you mean");
             }
         }
@@ -160,6 +187,13 @@ public class Duke {
                 tasklist.add(t);
                 if(line.matches(".*[X].*")){
                     t.Check();
+                }
+            }else if(line.matches(".*[R].*")) {
+                int LocationOfBy2 = line.indexOf("(");
+                Recurring r = new Recurring(line.substring(6, LocationOfBy2-1),line.substring(LocationOfBy2+8,line.length()-1));
+                tasklist.add(r);
+                if (line.matches(".*[X].*")) {
+                    r.Check();
                 }
             }else if(line.matches(".*[E].*")){
                 int LocationOfBy = line.indexOf("(");
