@@ -46,7 +46,20 @@ public class Duke {
                 System.out.println("Thank you for using Chat bot! Goodbye!");
                 System.out.println("Your file is saved at:" +f.getAbsolutePath());
 
-            }else if(input.equals("list")){
+            }else if (input.matches(".*find.*")) {
+                String find = input.substring(5).trim();
+                int counter =0;
+                for(int i = 1; i<=tasklist.size(); i++)
+                {
+                    if(tasklist.get(i-1).toString().contains(find)){
+                        System.out.println( i + ". " + tasklist.get(i-1).toString());
+                        counter++;
+                    }
+                }
+                System.out.println("Found " +counter+"task that contains"+find);
+
+            }
+            else if(input.equals("list")){
                 System.out.println("Your List:");
                 for(int i = 1; i<=tasklist.size(); i++)
                     System.out.println( i + ". " + tasklist.get(i-1).toString());
@@ -91,6 +104,7 @@ public class Duke {
                     try {
                         String ErrorCheck=input.replaceAll("\\s","").substring(5);
                         ToDo t = new ToDo(input.substring(5));
+                        tasklist.add(t);
                         System.out.println("Added:" + t.description);
                     }
                     catch (Exception e){
@@ -144,19 +158,7 @@ public class Duke {
                     System.out.println("Sorry! Your reccurring date or time!");
                 }
             }
-            else if (input.matches(".*find.*")){
-                try{
-                    String[] split = input.split("/");
-                    Recurring r = new Recurring(split[0].substring(4).trim(),split[1].trim());
-                    System.out.println("Added:" + r.description);
-                    tasklist.add(r);
 
-                }catch (StringIndexOutOfBoundsException e) {
-                    System.out.println("Sorry! Your Reccuring Task cannot be empty! ");
-                } catch (Exception e){
-                    System.out.println("Sorry! Your reccurring date or time!");
-                }
-            }
             else{
                 System.out.println("Sorry I do not understand what do you mean");
             }
